@@ -1,13 +1,14 @@
 const router = require("express").Router();
-const car = require("../models/car");
+const task = require("../models/task");
+
 
 // CRUD operations
 
-// Create car (post)
+// Create list (post)
 router.post("/", (req, res) => {
     data = req.body;
 
-    car.insertMany(data)
+    list.insertMany(data)
         .then(data => {
             res.send(data);
             console.log(data[0]._id.toString());
@@ -17,9 +18,9 @@ router.post("/", (req, res) => {
         })
 });
 
-// Read all cars (get)
+// Read all lists (get)
 router.get("/", (req, res) => {
-    car.find()
+    list.find()
         .then(data => {
 
             res.send(mapArray(data));
@@ -30,9 +31,9 @@ router.get("/", (req, res) => {
 });
 
 //Additional routes
-//Query all cars based on stock status
-router.get("/instock/:status", (req, res) => {
-    car.find({ inStock: req.params.status })
+//Query all lists based on status
+/*router.get("/instock/:status", (req, res) => {
+    list.find({ inStock: req.params.status })
         .then(data => {
             res.send(mapArray(data));
         })
@@ -54,7 +55,7 @@ router.get("/price/:operator/:price", (req, res) => {
         filterExpr = { $gte: req.params.price };
     }
 
-    car.find({ price: filterExpr })
+    list.find({ price: filterExpr })
         .then(data => { res.send(data) })
         .catch(err => {
             res.status(500).send({ message: err.message })
@@ -62,10 +63,10 @@ router.get("/price/:operator/:price", (req, res) => {
 });
 
 
-
-//Read specific car based on id (get)
+*/
+//Read specific list based on id (get)
 router.get("/:id", (req, res) => {
-    car.findById(req.params.id)
+    list.findById(req.params.id)
         .then(data => { res.send(data) })
         .catch(err => {
             res.status(500).send({ message: err.message })
@@ -74,59 +75,51 @@ router.get("/:id", (req, res) => {
 
 });
 
-// Update specific car (put)
+// Update specific list (put)
 router.put("/:id", (req, res) => {
 
     const id = req.params.id;
-    car.findByIdAndUpdate(id, req.body)
+    list.findByIdAndUpdate(id, req.body)
         .then(data => {
             if (!data) {
-                res.status(404).send({ message: "Cannot update car with id=" + id + ". Maybe the car was not found!" });
+                res.status(404).send({ message: "Cannot update list with id=" + id + ". Maybe the list was not found!" });
             }
             else {
-                res.send({ message: "car was successfully updated." });
+                res.send({ message: "list was successfully updated." });
             }
         })
         .catch(err => {
-            res.status(500).send({ message: "Error updating car with id=" + id })
+            res.status(500).send({ message: "Error updating list with id=" + id })
         })
 });
 
-// Delete specific car (delete)
+// Delete specific list (delete)
 router.delete("/:id", (req, res) => {
-    x$
     const id = req.params.id;
-    car.findByIdAndDelete(id)
+    list.findByIdAndDelete(id)
         .then(data => {
             if (!data) {
-                res.status(404).send({ message: "Cannot delete car with id=" + id + ". Maybe the car was not found!" });
+                res.status(404).send({ message: "Cannot delete list with id=" + id + ". Maybe the list was not found!" });
             }
             else {
-                res.send({ message: "car was successfully deleted." });
+                res.send({ message: "list was successfully deleted." });
             }
         })
         .catch(err => {
-            res.status(500).send({ message: "Error deleting car with id=" + id })
+            res.status(500).send({ message: "Error deleting list with id=" + id })
         })
 });
-
 
 function mapArray(arr) {
 
     let outputArr = arr.map(element => (
         {
             id: element._id,
-            name: element.name,
-            description: element.description,
-            price: element.price,
-            inStock: element.inStock,
-            //link urln
-            uri: "/api/cars/" + element._id,
+            task: element.task,
+            uri: "/api/lists/" + element._id,
         }
     ));
 
     return outputArr;
 }
-
-
 module.exports = router;

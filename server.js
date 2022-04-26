@@ -12,8 +12,8 @@ const yaml = require('yamljs');
 const swaggerDefinition = yaml.load('./swagger.yaml');
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDefinition));
 
-// import car routes
-const carRoutes = require("./routes/car");
+// import list routes
+const taskRoutes = require("./routes/task");
 const authRoutes = require("./routes/auth");
 
 app.use(express.json());
@@ -25,7 +25,7 @@ app.get("/api/welcome", (req, res) => {
 })
 
 //import routes
-app.use("/api/cars", carRoutes);
+app.use("/api/tasks", taskRoutes);
 app.use("/api/user", authRoutes);
 
 
